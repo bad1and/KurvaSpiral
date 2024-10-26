@@ -7,6 +7,7 @@
 
 int position = 0;
 int n_button;
+int choice;
 
 void instruction (){
     printw("%s", "-------------------------------------------------------\n");
@@ -16,6 +17,7 @@ void instruction (){
     printw("%s", "X - установка крестика, O - установка нолика\n");
     printw("%s", "DELETE - удалить значение в клетке\n");
 }
+
 void menu() {
     printw("%s", "KrestikiNoliki by Tikhanov Oleg\n");
     printw("%s", "ver 0.1\n");
@@ -42,7 +44,7 @@ void menu() {
 
 
 // Заполнение по часовой стрелке снаружи
-void fillSpiralClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+void po_chas(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
     int top = 0, bottom = m - 1, left = 0, right = n - 1;
     int num = 1;
 
@@ -59,7 +61,7 @@ void fillSpiralClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
 }
 
 // Заполнение против часовой стрелки снаружи
-void fillSpiralCounterClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+void prot_chas(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
     int top = 0, bottom = m - 1, left = 0, right = n - 1;
     int num = 1;
 
@@ -76,7 +78,7 @@ void fillSpiralCounterClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
 }
 
 // Заполнение по часовой стрелке из центра
-void fillSpiralInsideClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+void in_po_chas(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
     int centerRow = m / 2, centerCol = n / 2;
     int top = centerRow, bottom = centerRow, left = centerCol, right = centerCol;
     int num = 1;
@@ -93,7 +95,7 @@ void fillSpiralInsideClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
 }
 
 // Заполнение против часовой стрелки из центра
-void fillSpiralInsideCounterClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+void in_prot_chas(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
     int centerRow = m / 2, centerCol = n / 2;
     int top = centerRow, bottom = centerRow, left = centerCol, right = centerCol;
     int num = 1;
@@ -109,8 +111,7 @@ void fillSpiralInsideCounterClockwise(int m, int n, int matrix[MAX_SIZE][MAX_SIZ
     }
 }
 
-
-void printMatrix(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+void print_done(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             printw("%4d", matrix[i][j]);
@@ -120,10 +121,21 @@ void printMatrix(int m, int n, int matrix[MAX_SIZE][MAX_SIZE]) {
 }
 
 
+void mini_instruction() {
+    printw("Выберите тип спирали spiral:\n");
+    printw("1 - Снаружи по часовой\n");
+    printw("2 - Снаружи против часовой\n");
+    printw("3 - Изнутри по часовой\n");
+    printw("4 - Изнутри против часовой\n");
+    scanw("%d", &choice);
+    clear();
+}
+
+
 int main() {
     setlocale(LC_ALL, "");
     initscr();
-    int m, n, choice;
+    int m, n;
 
     while (true) {
         menu();
@@ -151,42 +163,46 @@ int main() {
        //MAIN_Ы
         if ((position == 0 && n_button == 10)) {
             clear();
-            printw("Enter the number of rows (1-11): ");
-            scanw("%d", &m);
-            clear();
-            printw("Enter the number of columns (1-11): ");
-            scanw("%d", &n);
-            clear();
-
-            if (m < 1 || m > 11 || n < 1 || n > 11) {
-                printw("Matrix size out of bounds.\n");
-                getch();
-                endwin();
-                return 1;
+            while (true) {
+                printw("Введите количество столбцов (1-11): ");
+                scanw("%d", &m);
+                if (m < 1 || m > 11) {
+                    clear();
+                    printw("Неверные значения!\n");
+                } else {
+                    break;
+                }
             }
 
-            printw("Choose the type of spiral:\n");
-            printw("1 - Clockwise from outside\n");
-            printw("2 - Counterclockwise from outside\n");
-            printw("3 - Clockwise from inside\n");
-            printw("4 - Counterclockwise from inside\n");
-            scanw("%d", &choice);
             clear();
+            while (true) {
+                printw("Введите количество строк (1-11): ");
+                scanw("%d", &n);
+                if (n < 1 || n > 11) {
+                    clear();
+                    printw("Неверные значения!\n");
+                } else {
+                    break;
+                }
+            }
+
+            clear();
+            mini_instruction();
 
             int matrix[MAX_SIZE][MAX_SIZE] = {0};
 
             switch (choice) {
                 case 1:
-                    fillSpiralClockwise(m, n, matrix);
+                    po_chas(m, n, matrix);
                 break;
                 case 2:
-                    fillSpiralCounterClockwise(m, n, matrix);
+                    prot_chas(m, n, matrix);
                 break;
                 case 3:
-                    fillSpiralInsideClockwise(m, n, matrix);
+                    in_po_chas(m, n, matrix);
                 break;
                 case 4:
-                    fillSpiralInsideCounterClockwise(m, n, matrix);
+                    in_prot_chas(m, n, matrix);
                 break;
                 default:
                     printw("Invalid choice.\n");
@@ -195,7 +211,7 @@ int main() {
                 return 1;
             }
 
-            printMatrix(m, n, matrix);
+            print_done(m, n, matrix);
             getch();
         }
 
@@ -209,6 +225,7 @@ int main() {
                 menu();
             }
         }
+
 
         if ((position == 2 && n_button == 10) || n_button == 27) {
             break;
