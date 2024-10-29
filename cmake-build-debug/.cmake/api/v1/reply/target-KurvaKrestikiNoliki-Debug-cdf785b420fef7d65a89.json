@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "KurvaSpiral"
+			"path" : "KurvaKrestikiNoliki"
 		}
 	],
 	"backtrace" : 1,
@@ -60,7 +60,7 @@
 			]
 		}
 	],
-	"id" : "KurvaSpiral::@6890427a1f51a3e7e1df",
+	"id" : "KurvaKrestikiNoliki::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -86,8 +86,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "KurvaSpiral",
-	"nameOnDisk" : "KurvaSpiral",
+	"name" : "KurvaKrestikiNoliki",
+	"nameOnDisk" : "KurvaKrestikiNoliki",
 	"paths" : 
 	{
 		"build" : ".",

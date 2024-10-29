@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaSpiral/cmake-build-debug"
+			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaKrestikiNoliki/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -383,7 +383,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaSpiral/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaKrestikiNoliki/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -443,7 +443,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaSpiral"
+			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaKrestikiNoliki"
 		},
 		{
 			"name" : "CMAKE_INSTALL_NAME_TOOL",
@@ -723,7 +723,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "KurvaSpiral"
+			"value" : "KurvaKrestikiNoliki"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1098,7 +1098,7 @@
 			"value" : "[/Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/lib/libcurses.tbd][/Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include][v()]"
 		},
 		{
-			"name" : "KurvaSpiral_BINARY_DIR",
+			"name" : "KurvaKrestikiNoliki_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1107,10 +1107,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaSpiral/cmake-build-debug"
+			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaKrestikiNoliki/cmake-build-debug"
 		},
 		{
-			"name" : "KurvaSpiral_IS_TOP_LEVEL",
+			"name" : "KurvaKrestikiNoliki_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1122,7 +1122,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "KurvaSpiral_SOURCE_DIR",
+			"name" : "KurvaKrestikiNoliki_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1131,7 +1131,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaSpiral"
+			"value" : "/Users/oleg/myfiles/\u041b\u042d\u0422\u0418/\u041f\u0440\u043e\u0433\u0430/\u041b\u0430\u0431\u044b/KurvaKrestikiNoliki"
 		},
 		{
 			"name" : "PKG_CONFIG_ARGN",
