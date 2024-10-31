@@ -1,258 +1,138 @@
 #include <locale.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <ncurses.h>
 
-int key;
-int width, height, znaki_riad;
-int PosX = 1, PosY = 1;
+
 int position = 0;
 int n_button;
-bool done = false;
-int counter_X_O;
-int win_counter;
-
-
-// хранение коорд
-typedef struct {
-    int x, y;
-} Point;
-int dx[] = {-1, 1, 0, 0};
-int dy[] = {0, 0, -1, 1};
-
-
-void instruction (){
-    printw("%s", "-------------------------------------------------------\n");
-    printw("%s", "Используйте стрелки для перемещения\n");
-    printw("%s", "Вы - $\n");
-    printw("%s", "Игра начинается с крестика (Х)\n");
-    printw("%s", "X - установка крестика, O - установка нолика\n");
-    printw("%s", "DELETE - удалить значение в клетке\n");
-}
 
 void menu() {
-    printw("%s", "KrestikiNoliki by Tikhanov Oleg\n");
-    printw("%s", "ver 0.1\n");
+    printw("%s", "Spiralka by Tikhanov Oleg\n");
+    printw("%s", "ver 0.3\n");
     printw("%s", "\n");
-    printw("%s", "Перед использованием прочитайте инструкцию 2 п.\n");
+    printw("%s", "Перед использованием прочитайте инструкцию 6 п.\n");
     printw("%s", "-----------------\n");
     printw("%s", "\n");
 
-    char screen[4][35] = {
+    char screen[8][70] = {
         "1. Играть",
-        "2. Инструкция",
-        "3. Выход",
+        "2. Спираль по часовой стрелке",
+        "3. Спираль против часовой",
+        "4. Спираль изнутри по часовой",
+        "5. Спираль изнутри против часовой",
+        "6. Инструкция",
+        "7. Выход",
         "",
     };
 
-    for (int i = 0; i <= 3; ++i) {
+    for (int i = 0; i <= 7; ++i) {
         if (i == position) {
             printw("%s  %s\n", screen[i], "<---");
         } else {
             printw("%s\n", screen[i]);
         }
-
-        if (i == 3 && win_counter == 10) {
-            printw("X WIN!\n");
-        }
-        if (i == 3 && win_counter == 11) {
-            printw("O WIN!\n");
-        }
-        if (i == 3 && win_counter == 12) {
-            printw("Ничья!\n");
-        }
     }
 }
 
-
-
-bool canWin(int coutForWin, int sizeX, int sizeY, char maze[sizeY][sizeX], char symbol) {
-    // Проверка строк
-    for (int y = 0; y < sizeY; y++) {
-        for (int x = 0; x <= sizeX - coutForWin; x++) {
-            int cnt = 0;
-            for (int k = 0; k < coutForWin; k++) {
-                if (maze[y][x + k] == symbol || maze[y][x + k] == '.') {
-                    cnt++;
-                }
-            }
-            if (cnt == coutForWin) return true;
-        }
-    }
-
-    // Проверка столбцов
-    for (int x = 0; x < sizeX; x++) {
-        for (int y = 0; y <= sizeY - coutForWin; y++) {
-            int cnt = 0;
-            for (int k = 0; k < coutForWin; k++) {
-                if (maze[y + k][x] == symbol || maze[y + k][x] == '.') {
-                    cnt++;
-                }
-            }
-            if (cnt == coutForWin) return true;
-        }
-    }
-
-    // Проверка диагоналей
-    for (int y = 0; y <= sizeY - coutForWin; y++) {
-        for (int x = 0; x <= sizeX - coutForWin; x++) {
-            int cnt1 = 0, cnt2 = 0;
-            for (int k = 0; k < coutForWin; k++) {
-                if (maze[y + k][x + k] == symbol || maze[y + k][x + k] == '.') cnt1++;
-                if (maze[y + k][x + coutForWin - 1 - k] == symbol || maze[y + k][x + coutForWin - 1 - k] == '.') cnt2++;
-            }
-            if (cnt1 == coutForWin || cnt2 == coutForWin) return true;
-        }
-    }
-
-    return false;
+void instruction (){
+    printw("%s", "Spiralka by Tikhanov Oleg\n");
+    printw("%s", "ver 0.3\n");
+    printw("%s", "\n");
+    printw("%s", "Перед использованием прочитайте инструкцию 6 п.\n");
+    printw("%s", "-------------------------------------------------------\n");
+    printw("%s", "\n");
+    printw("%s", "Используйте стрелки для перемещения по меню.\n");
+    printw("%s", "Вы - $\n");
+    printw("%s", "Введите значения (ширину и высоту спирали)\n");
+    printw("%s", "Выберите пункт интересующий вас.\n");
 }
 
-// Проверка победы
-bool check_win(int x, int y, char maze[height][width], char symbol) {
-    int directions[4][2] = {{1, 0}, {0, 1}, {1, 1}, {1, -1}}; // Вправо, вниз, диагонали
-    for (int d = 0; d < 4; d++) {
-        int dx = directions[d][0];
-        int dy = directions[d][1];
-        int count = 1;
+//по часовой стрелке снаружи
+void po_chas(int m, int n, int matrix[11][11]) {
+    int top = 0, bottom = m - 1, left = 0, right = n - 1;
+    int num = 1;
 
-        //в одну сторону
-        for (int step = 1; step < znaki_riad; step++) {
-            int nx = x + step * dx;
-            int ny = y + step * dy;
-            if (nx >= 0 && ny >= 0 && nx < width && ny < height && maze[ny][nx] == symbol) {
-                count++;
-            } else {
-                break;
-            }
-        }
-
-        //в обратную сторону
-        for (int step = 1; step < znaki_riad; step++) {
-            int nx = x - step * dx;
-            int ny = y - step * dy;
-            if (nx >= 0 && ny >= 0 && nx < width && ny < height && maze[ny][nx] == symbol) {
-                count++;
-            } else {
-                break;
-            }
-        }
-
-        if (count >= znaki_riad) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// Проверка ничьи
-bool check_draw(char maze[height][width]) {
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            if (maze[y][x] == '.') {
-                return false; // Есть пустые клетки
-            }
-        }
-    }
-    return true; // Все клетки заняты
-}
-
-// экран и ошибки
-void drawmain(int width, int height, char maze[height][width], int PosX, int PosY) {
-    clear(); // Очищаем экран
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            if (x == PosX && y == PosY) {
-                mvaddch(y, x, '$'); //Player
-            } else {
-                mvaddch(y, x, maze[y][x]); //Lab
-            }
-        }
-    }
-    printw("\n");
-
-    if (done == true) {
-        printw("Для выхода нажмите ESC\n");
-    }
-
-    if (key == 'x' && counter_X_O % 2 != 0) {
-        printw("Следующий ход нолика (O).\n");
-    } else if (key == 'o' && counter_X_O % 2 == 0) {
-        printw("Следующий ход крестика (X).\n");
+    while (top <= bottom && left <= right) {
+        for (int i = left; i <= right; i++) matrix[top][i] = num++;
+        top++;
+        for (int i = top; i <= bottom; i++) matrix[i][right] = num++;
+        right--;
+        if (top <= bottom) for (int i = right; i >= left; i--) matrix[bottom][i] = num++;
+        bottom--;
+        if (left <= right) for (int i = bottom; i >= top; i--) matrix[i][left] = num++;
+        left++;
     }
 }
 
-// Заполняем начальный массив точками
-void createlab(int width, int height, char maze[height][width]) {
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            maze[y][x] = '.';
-        }
+//против часовой стрелке снаружи
+void prot_chas(int m, int n, int matrix[11][11]) {
+    int top = 0, bottom = m - 1, left = 0, right = n - 1;
+    int num = 1;
+
+    while (top <= bottom && left <= right) {
+        for (int i = top; i <= bottom; i++) matrix[i][left] = num++;
+        left++;
+        for (int i = left; i <= right; i++) matrix[bottom][i] = num++;
+        bottom--;
+        if (left <= right) for (int i = bottom; i >= top; i--) matrix[i][right] = num++;
+        right--;
+        if (top <= bottom) for (int i = right; i >= left; i--) matrix[top][i] = num++;
+        top++;
     }
 }
 
-// отрисовка + обработка кнопок
-void keywork(char maze[height][width], Point* start, Point* end) {
-    drawmain(width, height, maze, PosX, PosY);
+//по часовой стрелке внутри
+void in_po_chas(int m, int n, int matrix[11][11]) {
+    int top = 0, bottom = m - 1, left = 0, right = n - 1;
+    int maxis = m*n;
 
-    key = getch();
-
-    if (key == KEY_UP) {
-        if (PosY > 0) PosY--;
+    while (top <= bottom && left <= right) {
+        for (int i = top; i <= bottom; i++) matrix[i][left] = maxis--;
+        left++;
+        for (int i = left; i <= right; i++) matrix[bottom][i] = maxis--;
+        bottom--;
+        if (left <= right) for (int i = bottom; i >= top; i--) matrix[i][right] = maxis--;
+        right--;
+        if (top <= bottom) for (int i = right; i >= left; i--) matrix[top][i] = maxis--;
+        top++;
     }
-    if (key == KEY_DOWN) {
-        if (PosY < height - 1) PosY++;
-    }
-    if (key == KEY_RIGHT) {
-        if (PosX < width - 1) PosX++;
-    }
-    if (key == KEY_LEFT) {
-        if (PosX > 0) PosX--;
-    }
-
-    if (key == 127) {
-        maze[PosY][PosX] = '.';
-        counter_X_O--;
-    }
-
-    if (key == 'x' && counter_X_O % 2 == 0) {
-        maze[PosY][PosX] = 'X';
-        counter_X_O++;
-
-        if (check_win(PosX, PosY, maze, 'X')) {
-            drawmain(width, height, maze, PosX, PosY);
-            win_counter = 10; // X win
-            done = true;
-        } else if ((!canWin(znaki_riad, width, height, maze, 'X') && !canWin(znaki_riad, width, height, maze, 'O')) || check_draw(maze)) {
-            drawmain(width, height, maze, PosX, PosY);
-            win_counter = 12; // nichya
-            done = true;
-        }
-    }
-
-    if (key == 'o' && counter_X_O % 2 != 0) {
-        maze[PosY][PosX] = 'O';
-        counter_X_O++;
-
-        if (check_win(PosX, PosY, maze, 'O')) {
-            drawmain(width, height, maze, PosX, PosY);
-            win_counter = 11; // O win
-            done = true;
-        } else if ((!canWin(znaki_riad, width, height, maze, 'X') && !canWin(znaki_riad, width, height, maze, 'O')) || check_draw(maze)) {
-            drawmain(width, height, maze, PosX, PosY);
-            win_counter = 12; // nichya
-            done = true;
-        }
-    }
-
 }
+
+//против часовой стрелке снаружи
+void in_prot_chas(int m, int n, int matrix[11][11]) {
+    int maxis = m*n;
+    int top = 0, bottom = m - 1, left = 0, right = n - 1;
+
+    while (top <= bottom && left <= right) {
+        for (int i = left; i <= right; i++) matrix[top][i] = maxis--;
+        top++;
+        for (int i = top; i <= bottom; i++) matrix[i][right] = maxis--;
+        right--;
+        if (top <= bottom) for (int i = right; i >= left; i--) matrix[bottom][i] = maxis--;
+        bottom--;
+        if (left <= right) for (int i = bottom; i >= top; i--) matrix[i][left] = maxis--;
+        left++;
+    }
+}
+
+//вывод
+void print_done(int m, int n, int matrix[11][11]) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printw("%4d", matrix[i][j]);
+        }
+        printw("\n");
+    }
+}
+
 
 
 int main() {
     setlocale(LC_ALL, "");
     initscr();
-    keypad(stdscr, FALSE);
-    Point start = {-1, -1}, end = {-1, -1}; // за границу заносим
+    int m = 0, n = 0;
+    int matrix[11][11] = {0};
+
 
     while (true) {
         menu();
@@ -266,11 +146,11 @@ int main() {
                 if (n_button == 65) {
                     position = position - 1;
                     if (position < 0) {
-                        position = 2;
+                        position = 6;
                     }
                 } else if (n_button == 66) {
                     position = position + 1;
-                    if (position > 2) {
+                    if (position > 6) {
                         position = 0;
                     }
                 }
@@ -278,51 +158,90 @@ int main() {
         }
 
        //MAIN_Ы
-        if ((position == 0 && n_button == 10) || n_button == 27) {
-            win_counter = 0;
-            counter_X_O = 0;
-            done = false;
-            keypad(stdscr, TRUE);
+        if ((position == 0 && n_button == 10) || n_button == 49) {
             clear();
             while (true) {
-                printw("Введите размеры игрового поля (от 3 до 15): ");
-                scanw("%d %d", &width, &height);
-                if (width < 3 || height < 3 || width > 15 || height > 15) {
+                printw("Введите количество столбцов (1-11): ");
+                scanw("%d", &m);
+                if (m < 1 || m > 11) {
                     clear();
                     printw("Неверные значения!\n");
                 } else {
                     break;
                 }
             }
-            clear();
 
+            clear();
             while (true) {
-                printw("Введите количество знаков в ряду для победы (от 3 до 15): ");
-                scanw("%d", &znaki_riad);
-                if (znaki_riad < 3 || znaki_riad > 15) {
+                printw("Введите количество строк (1-11): ");
+                scanw("%d", &n);
+                if (n < 1 || n > 11) {
                     clear();
                     printw("Неверные значения!\n");
                 } else {
-                    break;
-                }
-            }
-            clear();
-
-            char maze[width][height];
-            createlab(width, height, maze);
-
-            while (1) {
-                keywork(maze, &start, &end);
-
-                if (done || key == 27) {
-                    keypad(stdscr, FALSE);
                     break;
                 }
             }
         }
 
+        //По часовой
+        if ((position == 1 && n_button == 10) || n_button == 50) {
+            clear();
+            if (m == 0 || n == 0 || (m == 0 && n == 0)) {
+                printw("\nВы ничего не ввели...");
+                getch();
+            }else {
+                po_chas(m, n, matrix);
+                print_done(m, n, matrix);
+                printw("\nДля выхода нажмите любую кнопку...");
+                getch();
+            }
+        }
+
+        //Против часовой
+        if ((position == 2 && n_button == 10) || n_button == 51) {
+            clear();
+            if (m == 0 || n == 0 || (m == 0 && n == 0)) {
+                printw("\nВы ничего не ввели...");
+                getch();
+            }else {
+                prot_chas(m, n, matrix);
+                print_done(m, n, matrix);
+                printw("\nДля выхода нажмите любую кнопку...");
+                getch();
+            }
+        }
+
+        //По часовой внутри
+        if ((position == 3 && n_button == 10) || n_button == 52) {
+            clear();
+            if (m == 0 || n == 0 || (m == 0 && n == 0)) {
+                printw("\nВы ничего не ввели...");
+                getch();
+            }else {
+                in_po_chas(m, n, matrix);
+                print_done(m, n, matrix);
+                printw("\nДля выхода нажмите любую кнопку...");
+                getch();
+            }
+        }
+
+        //Против часовой внутри
+        if ((position == 4 && n_button == 10) || n_button == 53) {
+            clear();
+            if (m == 0 || n == 0 || (m == 0 && n == 0)) {
+                printw("\nВы ничего не ввели...");
+                getch();
+            }else {
+                in_prot_chas(m, n, matrix);
+                print_done(m, n, matrix);
+                printw("\nДля выхода нажмите любую кнопку...");
+                getch();
+            }
+        }
+
         //Instruction
-        if ((position == 1 && n_button == 10)) {
+        if ((position == 5 && n_button == 10) || n_button == 54) {
             clear();
             instruction();
             n_button = getch();
@@ -332,7 +251,8 @@ int main() {
             }
         }
 
-        if ((position == 2 && n_button == 10) || n_button == 27) {
+
+        if ((position == 6 && n_button == 10) || n_button == 55) {
             break;
         }
 
