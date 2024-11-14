@@ -8,7 +8,7 @@ int n_button;
 
 void menu() {
     printw("%s", "Spiralka by Tikhanov Oleg\n");
-    printw("%s", "ver 0.3\n");
+    printw("%s", "ver 1.0\n");
     printw("%s", "\n");
     printw("%s", "Перед использованием прочитайте инструкцию 6 п.\n");
     printw("%s", "-----------------\n");
